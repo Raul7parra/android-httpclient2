@@ -107,7 +107,7 @@ fun ListadoTareasContent(
                             ListItem(
 
                                 headlineContent = { Text(tarea.titulo) },
-                                supportingContent = { Text(tarea.description) },
+                                supportingContent = { Text(tarea.descripcion) },
                                 trailingContent = {
                                     IconButton(
                                         onClick = { onDelete(tarea.id) },

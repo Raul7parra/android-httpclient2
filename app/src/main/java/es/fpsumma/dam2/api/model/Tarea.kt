@@ -5,5 +5,5 @@ import android.accessibilityservice.GestureDescription
 data class Tarea(
     val id: Int,
     val titulo: String,
-    val description: String
+    val descripcion: String
 )

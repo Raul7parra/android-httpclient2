@@ -48,7 +48,7 @@ fun DetalleTareaContent(
     LaunchedEffect(tarea?.id) {
         tarea?.let {
             titulo = it.titulo
-            descripcion = it.description
+            descripcion = it.descripcion
         }
     }
 
