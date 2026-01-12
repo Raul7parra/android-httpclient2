@@ -47,13 +47,13 @@ fun ListadoTareasContent(
             TopAppBar(
                 title = { Text("Listado de tareas") },
                 navigationIcon = {
-                    IconButton(onClick = {onBack}) {
+                    IconButton(onClick = {onBack()}) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 },
                 actions = {
                     Row {
-                        IconButton(onClick = {onAdd}) {
+                        IconButton(onClick = {onAdd()}) {
                             Icon(Icons.AutoMirrored.Filled.NoteAdd, contentDescription = "Añadir")
                         }
 

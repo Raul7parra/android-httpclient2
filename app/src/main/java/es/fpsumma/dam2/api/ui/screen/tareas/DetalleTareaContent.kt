@@ -19,27 +19,40 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import es.fpsumma.dam2.api.model.Tarea
 import es.fpsumma.dam2.api.ui.navegation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NuevaTareaContent(
+fun DetalleTareaContent(
+    tarea: Tarea?,
     onBack: () -> Unit,
-    onSave: (String, String) -> Unit,
+    onSave: (titulo: String, descripcion: String) -> Unit,
     modifier: Modifier = Modifier
+) {
 
-){
     var titulo by rememberSaveable { mutableStateOf("") }
     var descripcion by rememberSaveable { mutableStateOf("") }
 
-    fun handleAddTarea() {
+    // Cuando llegue la tarea, rellena los campos
+    LaunchedEffect(tarea?.id) {
+        tarea?.let {
+            titulo = it.titulo
+            descripcion = it.description
+        }
+    }
+
+    fun handleUpdateTarea() {
         onSave(titulo, descripcion)
     }
 
@@ -48,7 +61,7 @@ fun NuevaTareaContent(
             TopAppBar(
                 title = { Text("Listado de tareas") },
                 navigationIcon = {
-                    IconButton(onClick = {onBack()}) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 }
@@ -79,9 +92,9 @@ fun NuevaTareaContent(
             )
             Spacer(modifier.height(8.dp))
             Button(
-                onClick = ::handleAddTarea,
+                onClick = ::handleUpdateTarea,
                 modifier = modifier.fillMaxWidth()
-            ) { Text("Añadir nota") }
+            ) { Text("Actualizar tarea") }
 
         }
     }
