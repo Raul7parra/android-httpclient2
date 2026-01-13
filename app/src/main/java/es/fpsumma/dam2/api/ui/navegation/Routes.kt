@@ -4,6 +4,8 @@ object Routes {
     const val HOME = "home"
     const val TAREA_LISTADO = "tareas/listado"
 
+    const val TAREA_LISTADO_API = "tareas/listado_api" //ruta añadida para la API
+
     const val TAREA_ADD = "tareas/nueva"
 
     const val TAREA_VIEW = "tareas/detalle/{id}"
