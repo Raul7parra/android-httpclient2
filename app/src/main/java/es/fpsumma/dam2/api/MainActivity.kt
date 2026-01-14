@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import es.fpsumma.dam2.api.ui.navegation.AppNavHost
 import es.fpsumma.dam2.api.ui.theme.ActividadconsumiendoapiTheme
+import es.fpsumma.dam2.api.viewmodel.TareasRemoteViewModel
 import es.fpsumma.dam2.api.viewmodel.TareasViewModel
 
 
@@ -27,8 +28,13 @@ class MainActivity : ComponentActivity() {
 fun MyApp() {
     val navController = rememberNavController()
     val tareasViewModel: TareasViewModel = viewModel()
+    val tareasRemoteViewModel: TareasRemoteViewModel = viewModel()
     ActividadconsumiendoapiTheme {
-        AppNavHost(navController = navController, tareasViewModel)
+        AppNavHost(
+            navController = navController,
+            tareasViewModel = tareasViewModel,
+            tareasRemoteViewModel = tareasRemoteViewModel
+        )
     }
 }
 

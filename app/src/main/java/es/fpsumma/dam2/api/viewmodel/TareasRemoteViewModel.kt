@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 /**
  * EL TareasRemoteViewModel obtiene datos desde una API que es el fichero RetrofitClient y
  * expone un estado que la UI puede ver
@@ -83,6 +84,26 @@ class TareasRemoteViewModel : ViewModel() {
             _state.update { current ->
                 current.copy(
                     error = e.message ?: "Error cargando tareas",
+                    loading = false
+                )
+            }
+        }
+    }
+
+    fun deleteTareaById(id: Int) = viewModelScope.launch {
+        _state.update { it.copy(loading = true) }
+
+        runCatching {
+            // Llamada directa, no devuele nada
+            api.eliminar(id)
+        }.onSuccess {
+            // Si la excepción no ha saltado es que la tarea se ha borrado correctamente
+            loadTareas()
+        }.onFailure { e ->
+            // Si falla, se guarda un mensaje y paramos el loading
+            _state.update { current ->
+                current.copy(
+                    error = e.message ?: "No se pudo eliminar la tarea",
                     loading = false
                 )
             }

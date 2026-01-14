@@ -1,5 +1,6 @@
 package es.fpsumma.dam2.api.ui.screen.tareas
 
+import android.R.attr.id
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,6 @@ fun ListadoTareasRemoteRoute(
         onBack = { navController.popBackStack() },
         onAdd = { navController.navigate(Routes.TAREA_ADD) },
         onOpenDetalle = { id -> navController.navigate(Routes.tareaView(id)) },
-        onDelete = {},
+        onDelete = {vm.deleteTareaById(id)},
     )
 }

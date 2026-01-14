@@ -7,12 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import es.fpsumma.dam2.api.ui.screen.tareas.DetalleTareaRoomRoute
-import es.fpsumma.dam2.api.ui.screen.tareas.DetalleTareaScreen
 import es.fpsumma.dam2.api.ui.screen.tareas.ListadoTareasRemoteRoute
 import es.fpsumma.dam2.api.ui.screen.tareas.ListadoTareasRoomRoute
-import es.fpsumma.dam2.api.ui.screen.tareas.ListadoTareasScreen
 import es.fpsumma.dam2.api.ui.screen.tareas.NuevaTareaRoomRoute
-import es.fpsumma.dam2.api.ui.screen.tareas.NuevaTareaScreen
 import es.fpsumma.dam2.api.viewmodel.TareasRemoteViewModel
 import es.fpsumma.dam2.api.viewmodel.TareasViewModel
 
