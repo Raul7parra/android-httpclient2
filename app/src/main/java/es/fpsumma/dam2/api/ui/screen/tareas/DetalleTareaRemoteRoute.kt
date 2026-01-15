@@ -2,6 +2,7 @@ package es.fpsumma.dam2.api.ui.screen.tareas
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -13,12 +14,11 @@ fun DetalleTareaRemoteRoute(
     navController: NavController,
     vm: TareasRemoteViewModel
 ) {
+    val tarea by vm.selected.collectAsState()
 
     LaunchedEffect(id) {
         vm.loadTarea(id)
     }
-
-    val tarea by vm.selected.collectAsStateWithLifecycle()
 
     DetalleTareaContent(
         tarea = tarea,

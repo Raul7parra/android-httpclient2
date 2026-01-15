@@ -13,7 +13,7 @@ fun NuevaTareaRemoteRoute(
         onBack = { navController.popBackStack() },
         onSave = {titulo, descripcion ->
             vm.postTarea(titulo, descripcion)
-            navController.navigate("TAREAS_LISTADO")
+            navController.popBackStack()
         }
     )
 }

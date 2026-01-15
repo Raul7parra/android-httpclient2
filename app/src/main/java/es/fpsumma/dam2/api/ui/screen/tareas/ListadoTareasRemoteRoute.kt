@@ -18,7 +18,7 @@ fun ListadoTareasRemoteRoute(
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        vm.loadTarea(id)
+        vm.loadTareas()
     }
 
     ListadoTareasContent(

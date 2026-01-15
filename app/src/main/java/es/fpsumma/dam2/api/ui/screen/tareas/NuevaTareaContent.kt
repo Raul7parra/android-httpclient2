@@ -79,7 +79,7 @@ fun NuevaTareaContent(
             )
             Spacer(modifier.height(8.dp))
             Button(
-                onClick = ::handleAddTarea,
+                onClick = {handleAddTarea()},
                 modifier = modifier.fillMaxWidth()
             ) { Text("Añadir nota") }
 

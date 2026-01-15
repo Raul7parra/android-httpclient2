@@ -46,15 +46,79 @@ class TareasRemoteViewModel : ViewModel() {
     private val _selected = MutableStateFlow<Tarea?>(null)
     val selected: StateFlow<Tarea?> = _selected
 
+    fun loadTareas() = viewModelScope.launch {
+        // 1) Antes de llamar a la red, avisamos a la UI de que estamos cargando.
+        //    También limpiamos errores previos.
+        _state.update { current ->
+            current.copy(loading = true, error = null)
+        }
+
+        /**
+         * runCatching hace de "try/catch" funcional:
+         * - Lo que devuelva el bloque irá a onSuccess(...)
+         * - Si el bloque lanza una excepción, irá a onFailure(...)
+         */
+        runCatching {
+            // 2) Llamada HTTP (suspend) al endpoint: GET /api/tareas
+            val res = api.listar()
+
+            // 3) Si el HTTP no es 2xx, lo convertimos en excepción para ir a onFailure(...)
+            if (!res.isSuccessful) error("HTTP ${res.code()}")
+
+            // 4) Si el body es null, devolvemos lista vacía (para evitar NPE)
+            res.body() ?: emptyList()
+        }.onSuccess { listaDto ->
+            // 5) Si todo salió bien, aquí tenemos la lista de DTOs que viene de la API.
+            //    Convertimos DTO -> Modelo de la app.
+            //    (La UI trabaja con Tarea, no con TareaDTO)
+            val tareas = listaDto.map { dto ->
+                Tarea(
+                    id = dto.id,
+                    titulo = dto.titulo,
+                    descripcion = dto.descripcion
+                )
+            }
+
+            // 6) Actualizamos el estado:
+            //    - tareas con la lista convertida
+            //    - loading=false porque ya acabó la carga
+            _state.update { current ->
+                current.copy(tareas = tareas, loading = false)
+            }
+        }.onFailure { e ->
+            // 7) Si ha fallado (sin internet, timeout, 500, etc.), guardamos un mensaje de error
+            //    y paramos el loading.
+            _state.update { current ->
+                current.copy(
+                    error = e.message ?: "Error cargando tareas",
+                    loading = false
+                )
+            }
+        }
+    }
+
     fun loadTarea(id: Int) = viewModelScope.launch {
         runCatching {
             val res = api.listarid(id)
+
+            // Verificamos que la respuesta sea exitosa
             if (!res.isSuccessful) error("HTTP ${res.code()}")
+
+            // Extraemos el cuerpo o lanzamos error si es nulo
             res.body() ?: error("Sin body")
         }.onSuccess { dto ->
-            _selected.value = Tarea(dto.id, dto.titulo, dto.descripcion)
+            // Convertimos el TareaDTO recibido en nuestro modelo Tarea y lo guardamos
+            _selected.value = Tarea(
+                id = dto.id,
+                titulo = dto.titulo,
+                descripcion = dto.descripcion
+            )
         }.onFailure { e ->
-            _state.update { it.copy(error = e.message ?: "Error cargando detalle") }
+            // Si falla, se guarda un mensaje y paramos el loading
+            _state.update { it.copy(
+                error = e.message ?: "Error cargando detalle",
+                loading = false
+            ) }
         }
     }
 
@@ -66,7 +130,7 @@ class TareasRemoteViewModel : ViewModel() {
             api.eliminar(id)
         }.onSuccess {
             // Si la excepción no ha saltado es que la tarea se ha borrado correctamente
-            loadTarea(id)
+            loadTareas()
         }.onFailure { e ->
             // Si falla, se guarda un mensaje y paramos el loading
             _state.update { current ->
@@ -86,7 +150,7 @@ class TareasRemoteViewModel : ViewModel() {
             api.crear(body)
         }.onSuccess {
             // Si la excepción no ha saltado es que la tarea se ha borrado correctamente
-            loadTarea(id)
+            loadTareas()
         }.onFailure { e ->
             // Si falla, se guarda un mensaje y paramos el loading
             _state.update { current ->
@@ -106,7 +170,7 @@ class TareasRemoteViewModel : ViewModel() {
             api.actualizar(id, body)
         }.onSuccess {
             // Si la excepción no ha saltado es que la tarea se ha borrado correctamente
-            loadTarea(id)
+            loadTareas()
         }.onFailure { e ->
             // Si falla, se guarda un mensaje y paramos el loading
             _state.update { current ->

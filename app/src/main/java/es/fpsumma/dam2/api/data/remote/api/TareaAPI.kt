@@ -14,17 +14,17 @@ import retrofit2.http.Path
 interface TareaAPI {
 
     @GET("api/tareas")
-    suspend fun listar(): Response<List<TareaDTO>> //cuando pongamos la URL su respuesta será un List<TareaDTO>
+    suspend fun listar(): Response<List<TareaDTO>> //Cuando pongamos la URL su respuesta será un List<TareaDTO>
 
     @DELETE("api/tareas/{id}")
-    suspend fun eliminar(@Path ("id") id: Int) //Cuando pongamos la URL eliminará la tarea
+    suspend fun eliminar(@Path ("id") id: Int): Response<Unit> //Cuando pongamos la URL eliminará la tarea
 
     @POST("api/tareas")
-    suspend fun crear(@Body body: TareaCreateRequestDTO) :Response<TareaDTO>
+    suspend fun crear(@Body body: TareaCreateRequestDTO) :Response<TareaDTO> //Cuando pongamos la URL creará una tarea
 
     @PUT("api/tareas/{id}")
-    suspend fun actualizar(@Path("id") id: Int, @Body body: TareaUpdateRequestDTO): Response<TareaDTO>
+    suspend fun actualizar(@Path("id") id: Int, @Body body: TareaUpdateRequestDTO): Response<TareaDTO> //Cuando pongamos la URL actualizará la tarea con ese ID
 
     @GET ("api/tareas/{id}")
-    suspend fun listarid(@Path ("id") id: Int): Response<TareaDTO>
+    suspend fun listarid(@Path ("id") id: Int): Response<TareaDTO> //Cuando pongamos la URL listará la tarea que tenga ese ID
 }
